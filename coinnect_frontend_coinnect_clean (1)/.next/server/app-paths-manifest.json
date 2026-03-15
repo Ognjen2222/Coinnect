@@ -1,0 +1,8 @@
+{
+  "/page": "app/page.js",
+  "/login/page": "app/login/page.js",
+  "/(protected)/home/page": "app/(protected)/home/page.js",
+  "/(protected)/history/page": "app/(protected)/history/page.js",
+  "/(protected)/groups/page": "app/(protected)/groups/page.js",
+  "/(protected)/profile/page": "app/(protected)/profile/page.js"
+}

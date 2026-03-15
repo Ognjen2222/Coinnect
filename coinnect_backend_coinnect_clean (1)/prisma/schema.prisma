@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int             @id @default(autoincrement())
+  email          String          @unique
+  passwordHash   String
+  name           String
+  initials       String
+  memberSince    String
+  balanceDisplay String
+  createdAt      DateTime        @default(now())
+  groupMembers   GroupMember[]
+  paidExpenses   Expense[]       @relation("ExpensePaidBy")
+  participations ExpenseShare[]
+  activities     Activity[]
+}
+
+model Group {
+  id          Int           @id @default(autoincrement())
+  name        String
+  description String?
+  color       String        @default("gold")
+  createdAt   DateTime      @default(now())
+  members     GroupMember[]
+  expenses    Expense[]
+  activities  Activity[]
+}
+
+model GroupMember {
+  id       Int    @id @default(autoincrement())
+  role     String @default("member")
+  userId   Int
+  groupId  Int
+  user     User   @relation(fields: [userId], references: [id])
+  group    Group  @relation(fields: [groupId], references: [id])
+
+  @@unique([userId, groupId])
+}
+
+model Expense {
+  id          Int            @id @default(autoincrement())
+  title       String
+  amountCents Int
+  paidAt      DateTime       @default(now())
+  paidById    Int
+  groupId     Int
+  note        String?
+  paidBy      User           @relation("ExpensePaidBy", fields: [paidById], references: [id])
+  group       Group          @relation(fields: [groupId], references: [id])
+  shares      ExpenseShare[]
+}
+
+model ExpenseShare {
+  id          Int     @id @default(autoincrement())
+  expenseId   Int
+  userId      Int
+  shareCents  Int
+  settled     Boolean @default(false)
+  expense     Expense @relation(fields: [expenseId], references: [id])
+  user        User    @relation(fields: [userId], references: [id])
+
+  @@unique([expenseId, userId])
+}
+
+model Activity {
+  id          Int      @id @default(autoincrement())
+  type        String
+  title       String
+  subtitle    String?
+  amountCents Int
+  direction   String
+  happenedAt  DateTime @default(now())
+  userId      Int
+  groupId     Int?
+  user        User     @relation(fields: [userId], references: [id])
+  group       Group?   @relation(fields: [groupId], references: [id])
+}

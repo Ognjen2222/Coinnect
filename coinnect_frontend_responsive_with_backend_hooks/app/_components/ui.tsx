@@ -1,0 +1,3 @@
+import { ReactNode } from "react";
+export function SectionCard({ children, className = "" }: { children: ReactNode; className?: string }) { return <div className={`glass-card rounded-[28px] p-5 ${className}`}>{children}</div>; }
+export function SectionTitle({ eyebrow, title, action }: { eyebrow?: string; title: string; action?: ReactNode }) { return <div className="mb-4 flex items-center justify-between gap-4"><div>{eyebrow && <p className="mb-1 text-xs font-medium uppercase tracking-[0.24em] text-[#8b94a7]">{eyebrow}</p>}<h2 className="text-2xl font-semibold tracking-tight text-white">{title}</h2></div>{action}</div>; }
